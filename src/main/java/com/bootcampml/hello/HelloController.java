@@ -1,10 +1,8 @@
 package com.bootcampml.hello;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -17,6 +15,7 @@ public class HelloController {
 
         return "Hello world from my first API " + name;
     }
+
     @GetMapping (path="/chau/{name}")
     public String sayGoodbye(@PathVariable String name){
 
@@ -48,31 +47,32 @@ public class HelloController {
         return "La superfice total de la casa es= "+ sup;
     }
     @PostMapping("/precio")
-    public  String getPrecio(@RequestBody Casa casa ) {
+    public  ResponseEntity<String> getPrecio(@RequestBody Casa casa ) {
 
-        return "El precio de la casa es= "+ casa.getValor();
+        return new ResponseEntity<String>("El precio de la casa es= "+ casa.getValor(), HttpStatus.OK);
     }
     @PostMapping("/habitacion")
-    public Habitacion getMasGrande(@RequestBody Casa casa){
-        return casa.habitacionMayor();
+    public ResponseEntity<Habitacion> getMasGrande(@RequestBody Casa casa){
+        return new ResponseEntity<Habitacion>(casa.habitacionMayor(), HttpStatus.OK);
     }
     @PostMapping("/metrosCuadrados")
-    public String getMetros(@RequestBody Casa casa){
-        return casa.metrosCuadrados();
+    public ResponseEntity<String> getMetros(@RequestBody Casa casa){
+
+        return new ResponseEntity<String>(casa.metrosCuadrados(), HttpStatus.OK);
     }
     @PostMapping("edad")
-    public String calcularEdad(@RequestBody Edad edad){
+    public ResponseEntity<String> calcularEdad(@RequestBody Edad edad){
 
-        return "Edad= " + edad.calcularEdad();
+        return new ResponseEntity<String>("Edad= " + edad.calcularEdad(), HttpStatus.OK);
     }
     @PostMapping("promedio")
-    public Diploma calcularPromedio(@RequestBody Alumno a){
+    public ResponseEntity<Diploma> calcularPromedio(@RequestBody Alumno a){
         double promedio= a.CalcularPromedio();
-        String resultado= "El promedio del alumno es: " + promedio +"\n";
+        String resultado= "El promedio del alumno es: " + promedio + '\n';
         if(promedio>= 9){
             resultado+= " FELICITACIONES!";
         }
         Diploma dip= new Diploma(resultado,promedio, a);
-        return dip;
+        return new ResponseEntity<Diploma>(dip,HttpStatus.OK);
     }
 }
